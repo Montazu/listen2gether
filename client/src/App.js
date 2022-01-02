@@ -1,22 +1,19 @@
-import { io } from "socket.io-client";
-import { useEffect } from "react";
+import { Routes, Route, Outlet, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import NoMatch from "./pages/NoMatch";
+import Host from "./pages/Host";
+import Admin from "./pages/Admin";
+import User from "./pages/User";
 
 export default function App() {
-  const socket = io("http://192.168.1.50:8000/rooms");
-
-  useEffect(() => {
-    socket.on("hello", function () {
-      console.log("hello received");
-    });
-  });
-
   return (
-    <div>
-      <h1>Słuchaj muzyki razem</h1>
-      <button>Utwórz pokój</button>
-      <br />
-      <input type='text' />
-      <button>Dołącz do pokoju</button>
-    </div>
+    <Routes>
+      <Route index element={<Home />} />
+      <Route path='h/:id' element={<Host />} />
+      <Route path='a/:id' element={<Admin />} />
+      <Route path='u/:id' element={<User />} />
+
+      <Route path='*' element={<NoMatch />} />
+    </Routes>
   );
 }
