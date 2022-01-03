@@ -13,16 +13,34 @@ app.use(cors());
 
 app.get("/:group/:roomId", (req, res) => {
   const { group, roomId } = req.params;
-  const room = io.of(`/${group}/${roomId}`);
+  const room = io.of(`/${roomId}`);
+  console.log(group);
   room.on("connection", (socket) => {
-    socket.join(roomId);
-    // room.to(roomId).emit("message", `Dołączyłeś do pokoju ${roomId}`);
-    socket.on("hello", (arg) => {
-      console.log(arg);
+    const roomH = `h_${roomId}`;
+    const roomU = `u_${roomId}`;
+    const roomA = `a_${roomId}`;
+
+    switch (group) {
+      case "h":
+        socket.join(roomH);
+        break;
+      case "u":
+        socket.join(roomU);
+        break;
+      case "a":
+        socket.join(roomA);
+        break;
+    }
+
+    socket.on("sendAll", (arg) => {
+      console.log([roomH, roomU, roomA]);
+      room.in([roomH, roomU, roomA]).emit("message", arg);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(`${socket.id} rozłączył się pokoju ${roomId}`);
     });
   });
-
-  // room.emit("message", `Dołączyłeś do pokoju ${roomId}`);
 });
 
 httpServer.listen(8000);
