@@ -39,7 +39,7 @@ export default () => {
 				<ul>
 					{playlist.map(music => (
 						<li key={music.id}>
-							<img src={music.image} />
+							<img src={music.thumbnail} />
 							<p>{music.title}</p>
 						</li>
 					))}

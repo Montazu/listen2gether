@@ -1,7 +1,8 @@
 import { Server } from 'socket.io'
 import { Innertube } from 'youtubei.js'
+import info from './info'
 
-export default (req, res) => {
+export default async (req, res) => {
 	if (res.socket.server.io) {
 		console.log("Already set up")
 		res.end()
@@ -10,12 +11,13 @@ export default (req, res) => {
 
 	const io = new Server(res.socket.server)
 	res.socket.server.io = io
+	const yt = await Innertube.create()
 
 	const getInfo = async (link) => {
-		const params = new URLSearchParams(new URL(link).search)
+		const elo = new URL(link).search
+		const params = new URLSearchParams(elo)
 		const id = params.get('v')
-
-		const yt = await Innertube.create()
+		
 		const videoInfo = await yt.actions.execute('/player', {
 			videoId: id,
 			client: 'YTMUSIC_ANDROID', 
@@ -25,13 +27,15 @@ export default (req, res) => {
 		  const title = videoInfo.video_details.title
 		  const { url } = videoInfo.streaming_data.adaptive_formats.pop()
 
-		const info = {
-			id: 3,
+		const data = {
+			id: Math.floor(Math.random() * 832061),
 			title,
 			thumbnail: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
 			url
 		}
-		console.log(info)
+		info.push(data)
+		console.log('Dodano pomyślnie')
+		io.emit('elo', data)
 	}
 
 	io.on("connection", (socket) => {
