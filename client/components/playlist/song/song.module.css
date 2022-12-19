@@ -1,0 +1,14 @@
+.wrapper {
+	background-color: red;
+	height: 6em;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	grid-template-rows: repeat(2, 1fr);
+	margin-bottom: .5em;
+}
+
+.elo {
+	grid-area: 1 / 1 / 3 / 2;
+	width: 50px;
+	height: 50px;
+}

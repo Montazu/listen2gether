@@ -18,25 +18,29 @@ export default async (req, res) => {
 		const params = new URLSearchParams(elo)
 		const id = params.get('v')
 		
-		const videoInfo = await yt.actions.execute('/player', {
-			videoId: id,
-			client: 'YTMUSIC_ANDROID', 
-			parse: true 
-		  });
-	  
-		const { title, author } = videoInfo.video_details
-		const { url } = videoInfo.streaming_data.adaptive_formats.pop()
-
-		const data = {
-			id: Math.floor(Math.random() * 832061),
-			title,
-			author,
-			thumbnail: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
-			url
+		try {
+			const videoInfo = await yt.actions.execute('/player', {
+				videoId: id,
+				client: 'YTMUSIC_ANDROID', 
+				parse: true 
+			  });
+		  
+			const { title, author } = videoInfo.video_details
+			const { url } = videoInfo.streaming_data.adaptive_formats.pop()
+	
+			const data = {
+				id: Math.floor(Math.random() * 832061),
+				title,
+				author,
+				thumbnail: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+				url
+			}
+			console.log(data)
+			info.push(data)
+			io.emit('elo', data)
+		} catch (error) {
+			console.log('wystąpił błąd')	
 		}
-		console.log(data)
-		info.push(data)
-		io.emit('elo', data)
 	}
 
 	io.on("connection", (socket) => {

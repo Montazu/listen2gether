@@ -1,34 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import io from 'socket.io-client'
 import styles from './form.module.css'
+
+let socket
 
 export const Form = () => {
 	const [message, setMessage] = useState('')
 
+	useEffect(() => {
+		socketInitializer()
+	}, [])
+
+	const socketInitializer = async () => {
+		await fetch('/api/socket')
+		socket = io()
+	}
+
 	const sendMessage = (e) => {
 		e.preventDefault()
 		console.log(message)
+		socket.emit('musicUrl', message)
 		setMessage('')
 	}
 
-	return (
-		<form 
-			className={styles.wrapper}
-			onSubmit={sendMessage}
-		>
-			<input 
-				className={styles.input} 
-				type={'url'}
-				placeholder={'Wpisz link z YouTube'}
-				onChange={e => setMessage(e.target.value)}
-				value={message}
-				required={true}
-			/>
-			<button 
-				className={styles.button} 
-				type={'submit'}
-			>
-				Dodaj
-			</button>
-		</form>
-	)
+	// return (
+		
+	// )
 }
