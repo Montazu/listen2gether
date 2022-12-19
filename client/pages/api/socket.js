@@ -24,17 +24,18 @@ export default async (req, res) => {
 			parse: true 
 		  });
 	  
-		  const title = videoInfo.video_details.title
-		  const { url } = videoInfo.streaming_data.adaptive_formats.pop()
+		const { title, author } = videoInfo.video_details
+		const { url } = videoInfo.streaming_data.adaptive_formats.pop()
 
 		const data = {
 			id: Math.floor(Math.random() * 832061),
 			title,
+			author,
 			thumbnail: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
 			url
 		}
+		console.log(data)
 		info.push(data)
-		console.log('Dodano pomyślnie')
 		io.emit('elo', data)
 	}
 

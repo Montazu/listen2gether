@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
+import { Thumbnail } from '../components/thumbnail/Thumbnail'
 
 let socket
 
@@ -39,7 +40,7 @@ export default () => {
 				<ul>
 					{playlist.map(music => (
 						<li key={music.id}>
-							<img src={music.thumbnail} />
+							<Thumbnail src={music.thumbnail} alt={music.title} />
 							<p>{music.title}</p>
 						</li>
 					))}
