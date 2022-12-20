@@ -27,7 +27,6 @@ export const Host = () => {
 	}
 
 	const nextSong = () => {
-		console.log('elo')
 		const e = playlist.indexOf(song)
 		const a = playlist[e+1]
 		setSong(a)
