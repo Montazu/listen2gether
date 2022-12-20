@@ -5,7 +5,7 @@ export const Host = () => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 
-	const socket = useSocket('ws://192.168.1.84:8000')
+	const socket = useSocket('ws://apil2g.montazu.pl')
 
 	useEffect(() => {
 		socket.connect()
