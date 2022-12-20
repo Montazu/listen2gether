@@ -1,0 +1,20 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node --experimental-specifier-resolution=node --no-warnings src",
+		"dev": "nodemon --experimental-specifier-resolution=node --no-warnings src",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"nodemon": "^2.0.20",
+		"socket.io": "^4.5.4",
+		"youtubei.js": "^2.6.0"
+	}
+}
