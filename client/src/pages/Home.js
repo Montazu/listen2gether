@@ -7,7 +7,7 @@ export const Home = () => {
 	const [song, setSong] = useState()
 	const [newSong, setNewSong] = useState('')
 
-	const socket = useSocket('ws://apil2g.montazu.pl')
+	const socket = useSocket('https://apil2g.montazu.pl')
 
 	useEffect(() => {
 		socket.connect()
