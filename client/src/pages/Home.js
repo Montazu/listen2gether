@@ -6,8 +6,11 @@ export const Home = () => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 	const [newSong, setNewSong] = useState('')
+	const [progress, setProgress] = useState(0)
 
-	const socket = useSocket(process.env.REACT_APP_API)
+	const socket = useSocket(process.env.REACT_APP_API, {
+		transports: ["websocket"]
+	  })
 
 	useEffect(() => {
 		socket.connect()
@@ -24,6 +27,7 @@ export const Home = () => {
 			setPlaylist(e => [...e, arg])
 			setPlaylist(e => [...new Set(e)])
 		})
+		socket.on('progress', (arg) => setProgress(arg))
 	}
 
 	const addNewSong = (event) => {
@@ -36,10 +40,7 @@ export const Home = () => {
 
 	const scrollView = () => {
 		const activeSong = document.getElementById('activeSong')
-		if (activeSong) {
-			console.log('przeładowno')
-			activeSong.scrollIntoView({ behavior: 'smooth' })
-		}
+		if (activeSong) activeSong.scrollIntoView({ behavior: 'smooth' })
 	}
 
 	return (
@@ -62,11 +63,14 @@ export const Home = () => {
 						))}
 					</div>
 					<div className={styles.active}>
-						<div className={styles.container}>
-							<img className={styles.image} src={song.thumbnail} alt={song.title} />
+						<div className={styles.wrapper}>
+							<div className={styles.container}>
+								<img className={styles.image} src={song.thumbnail} alt={song.title} />
+							</div>
+							<h2 className={styles.title}>{song.title}</h2>
+							<p className={styles.author}>{song.author}</p>
 						</div>
-						<h2 className={styles.title}>{song.title}</h2>
-						<p className={styles.author}>{song.author}</p>
+						<progress className={styles.progress} max={1} value={progress} />
 					</div>
 				</>
 			)}
