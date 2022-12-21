@@ -35,4 +35,9 @@ io.on('connection', async (socket) => {
 	socket.emit('song', song)
 	socket.on('newSong', (arg) => addNewSong(arg))
 	socket.on('song', sendSong)
+	socket.on('progress', (arg) => socket.broadcast.emit('progress', arg))
+	socket.on('clear', () => {
+		song = null
+		playlist.length = 0
+	})
 })

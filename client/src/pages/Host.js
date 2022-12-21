@@ -5,7 +5,9 @@ export const Host = () => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 
-	const socket = useSocket(process.env.REACT_APP_API)
+	const socket = useSocket(process.env.REACT_APP_API, {
+		transports: ["websocket"]
+	  })
 
 	useEffect(() => {
 		socket.connect()
@@ -23,10 +25,18 @@ export const Host = () => {
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
 	const audio = useRef()
+	let progress = 0
+
+	const sendTime = () => {
+		progress = audio.current.currentTime / audio.current.duration
+	}
 
 	const play = () => {
 		audio.current.play()
 		socket.emit('song', song)
+		// setInterval(() => {
+		// 	socket.emit('progress', progress)
+		// }, 1000)
 	}
 
 	const nextSong = () => {
@@ -34,6 +44,10 @@ export const Host = () => {
 		const a = playlist[e+1]
 		setSong(a)
 		socket.emit('song', a)
+	}
+
+	const clear = () => {
+		socket.emit('clear', 'clear')
 	}
 
 	if(song) document.title = song.title
@@ -44,6 +58,8 @@ export const Host = () => {
 				<>
 					<h1>{song.title}</h1>
 					<audio
+						onTimeUpdate={sendTime}
+						preload={'true'}
 						src={song.url}
 						ref={audio}
 						onEnded={nextSong}
@@ -51,6 +67,7 @@ export const Host = () => {
 						controls={true}
 					/>
 					<button onClick={play}>Play</button>
+					<button onClick={clear}>Clear</button>
 				</>
 			)}
 		</div>

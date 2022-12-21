@@ -6,8 +6,11 @@ export const Home = () => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 	const [newSong, setNewSong] = useState('')
+	const [progress, setProgress] = useState(0)
 
-	const socket = useSocket(process.env.REACT_APP_API)
+	const socket = useSocket(process.env.REACT_APP_API, {
+		transports: ["websocket"]
+	  })
 
 	useEffect(() => {
 		socket.connect()
@@ -16,11 +19,15 @@ export const Home = () => {
 
 	const startListeners = () => {
 		socket.on('playlist', (arg) => setPlaylist(arg))
-		socket.on('song', (arg) => setSong(arg))
+		socket.on('song', (arg) => {
+			setSong(arg)
+			scrollView()
+		})
 		socket.on('newSong', (arg) => {
 			setPlaylist(e => [...e, arg])
 			setPlaylist(e => [...new Set(e)])
 		})
+		socket.on('progress', (arg) => setProgress(arg))
 	}
 
 	const addNewSong = (event) => {
@@ -30,6 +37,11 @@ export const Home = () => {
 	}
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
+
+	const scrollView = () => {
+		const activeSong = document.getElementById('activeSong')
+		if (activeSong) activeSong.scrollIntoView({ behavior: 'smooth' })
+	}
 
 	return (
 		<div className={styles.main}>
@@ -41,7 +53,7 @@ export const Home = () => {
 				<>
 					<div className={styles.playlist}>
 						{playlist.map((item) => (
-							<div className={styles.song} key={item.id} style={item.id === song.id ? { background: '#1A1A1A' } : {}}>
+							<div className={styles.song} key={item.id} id={item.id === song.id ? 'activeSong' : null} style={item.id === song.id ? { background: '#1A1A1A' } : {}}>
 								<div className={styles.container}>
 									<img className={styles.image} src={item.thumbnail} alt={item.title} />
 								</div>
@@ -51,11 +63,14 @@ export const Home = () => {
 						))}
 					</div>
 					<div className={styles.active}>
-						<div className={styles.container}>
-							<img className={styles.image} src={song.thumbnail} alt={song.title} />
+						<div className={styles.wrapper}>
+							<div className={styles.container}>
+								<img className={styles.image} src={song.thumbnail} alt={song.title} />
+							</div>
+							<h2 className={styles.title}>{song.title}</h2>
+							<p className={styles.author}>{song.author}</p>
 						</div>
-						<h2 className={styles.title}>{song.title}</h2>
-						<p className={styles.author}>{song.author}</p>
+						<progress className={styles.progress} max={1} value={progress} />
 					</div>
 				</>
 			)}
