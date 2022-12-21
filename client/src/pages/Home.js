@@ -16,7 +16,10 @@ export const Home = () => {
 
 	const startListeners = () => {
 		socket.on('playlist', (arg) => setPlaylist(arg))
-		socket.on('song', (arg) => setSong(arg))
+		socket.on('song', (arg) => {
+			setSong(arg)
+			scrollView()
+		})
 		socket.on('newSong', (arg) => {
 			setPlaylist(e => [...e, arg])
 			setPlaylist(e => [...new Set(e)])
@@ -31,6 +34,14 @@ export const Home = () => {
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
+	const scrollView = () => {
+		const activeSong = document.getElementById('activeSong')
+		if (activeSong) {
+			console.log('przeładowno')
+			activeSong.scrollIntoView({ behavior: 'smooth' })
+		}
+	}
+
 	return (
 		<div className={styles.main}>
 			<form className={styles.form} onSubmit={addNewSong}>
@@ -41,7 +52,7 @@ export const Home = () => {
 				<>
 					<div className={styles.playlist}>
 						{playlist.map((item) => (
-							<div className={styles.song} key={item.id} style={item.id === song.id ? { background: '#1A1A1A' } : {}}>
+							<div className={styles.song} key={item.id} id={item.id === song.id ? 'activeSong' : null} style={item.id === song.id ? { background: '#1A1A1A' } : {}}>
 								<div className={styles.container}>
 									<img className={styles.image} src={item.thumbnail} alt={item.title} />
 								</div>
