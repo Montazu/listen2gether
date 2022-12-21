@@ -46,6 +46,10 @@ export const Host = () => {
 		socket.emit('song', a)
 	}
 
+	const clear = () => {
+		socket.emit('clear', 'clear')
+	}
+
 	if(song) document.title = song.title
 
 	return (
@@ -63,6 +67,7 @@ export const Host = () => {
 						controls={true}
 					/>
 					<button onClick={play}>Play</button>
+					<button onClick={clear}>Clear</button>
 				</>
 			)}
 		</div>
