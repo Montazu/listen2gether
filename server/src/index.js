@@ -2,7 +2,7 @@ import { Server } from 'socket.io'
 import pkg from 'youtubei.js'
 const { Innertube } = pkg
 
-const io = new Server(1234, { cors: { origin: ['https://l2g.montazu.pl', 'http://192.168.1.84:3000', 'http://localhost:3000'] } })
+const io = new Server(1234, { cors: { origin: ['wss://l2g.montazu.pl', 'https://l2g.montazu.pl', 'http://192.168.1.84:3000', 'http://localhost:3000'] } })
 
 const playlist = []
 let song
