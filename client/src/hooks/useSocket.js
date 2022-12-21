@@ -5,7 +5,7 @@ export const useSocket = (url, options) => {
 	const { current: socket } = useRef(io(url, options))
 
 	useEffect(() => {
-		if (socket) socket.close()
+		if (socket.readyState === 1) socket.close()
 	}, [socket])
 
 	return socket
