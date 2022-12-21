@@ -5,7 +5,7 @@ export const Host = () => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 
-	const socket = useSocket('https://apil2g.montazu.pl')
+	const socket = useSocket(process.env.REACT_APP_API)
 
 	useEffect(() => {
 		socket.connect()
@@ -14,7 +14,10 @@ export const Host = () => {
 
 	const startListeners = () => {
 		socket.on('playlist', (arg) => setPlaylist(arg))
-		socket.on('newSong', (arg) => setPlaylist(e => [...e, arg]))
+		socket.on('newSong', (arg) => {
+			setPlaylist(e => [...e, arg])
+			setPlaylist(e => [...new Set(e)])
+		})
 	}
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
@@ -32,6 +35,8 @@ export const Host = () => {
 		setSong(a)
 		socket.emit('song', a)
 	}
+
+	if(song) document.title = song.title
 
 	return (
 		<div>
