@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Home } from './pages/Home'
 import { Host } from './pages/Host'
+import { Admin } from './pages/Admin'
 import { NoMatch } from './pages/NoMatch'
 import './styles/index.css'
 
@@ -13,6 +14,7 @@ ReactDOM.createRoot(root).render(
 			<Routes>
 				<Route index element={<Home />} />
 				<Route path={'/host'} element={<Host />} />
+				<Route path={'/admin'} element={<Admin />} />
 				<Route path={'*'} element={<NoMatch />} />
 			</Routes>
 		</BrowserRouter>
