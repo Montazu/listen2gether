@@ -25,18 +25,16 @@ export const Host = () => {
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
 	const audio = useRef()
-	let progress = 0
 
-	const sendTime = () => {
-		progress = audio.current.currentTime / audio.current.duration
-	}
+	
 
 	const play = () => {
 		audio.current.play()
 		socket.emit('song', song)
-		// setInterval(() => {
-		// 	socket.emit('progress', progress)
-		// }, 1000)
+		setInterval(() => {
+			const progress = Math.floor(audio.current.currentTime / audio.current.duration * 100)
+			socket.emit('progress', progress)
+		}, 5000)
 	}
 
 	const nextSong = () => {
@@ -44,6 +42,7 @@ export const Host = () => {
 		const a = playlist[e+1]
 		setSong(a)
 		socket.emit('song', a)
+		socket.emit('progress', 0)
 	}
 
 	const clear = () => {
@@ -58,8 +57,6 @@ export const Host = () => {
 				<>
 					<h1>{song.title}</h1>
 					<audio
-						onPlay={play}
-						onTimeUpdate={sendTime}
 						preload={'true'}
 						src={song.url}
 						ref={audio}
@@ -67,7 +64,8 @@ export const Host = () => {
 						autoPlay={true}
 						controls={true}
 					/>
-					<button onClick={clear}>Clear</button>
+					<button onClick={play}>Play</button>
+					<button onClick={clear}>Clear playlist</button>
 				</>
 			)}
 		</div>
