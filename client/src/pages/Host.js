@@ -58,6 +58,7 @@ export const Host = () => {
 				<>
 					<h1>{song.title}</h1>
 					<audio
+						onPlay={play}
 						onTimeUpdate={sendTime}
 						preload={'true'}
 						src={song.url}
@@ -66,7 +67,6 @@ export const Host = () => {
 						autoPlay={true}
 						controls={true}
 					/>
-					<button onClick={play}>Play</button>
 					<button onClick={clear}>Clear</button>
 				</>
 			)}
