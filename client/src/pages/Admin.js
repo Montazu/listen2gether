@@ -1,14 +1,5 @@
-import { useContext } from 'react'
-import { SocketContext } from '../context/SocketContext'
+import { Form } from '../components/form/Form'
 
 export const Admin = () => {
-	const { playlist } = useContext(SocketContext)
-
-	console.log(playlist)
-
-	return (
-		<>
-			Admin
-		</>
-	)
+	return <Form />
 }
