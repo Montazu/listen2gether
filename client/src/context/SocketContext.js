@@ -20,7 +20,7 @@ const SocketProvider = ({ children }) => {
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
-	const value = { socket, playlist, song, progress }
+	const value = { socket, playlist, song, progress: progress || 0 }
 	
 	return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
 }

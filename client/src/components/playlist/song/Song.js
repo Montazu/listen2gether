@@ -20,7 +20,9 @@ export const Song = ({ id, title, author, thumbnail, active }) => {
 				<h2 className={styles.title}>{song.title}</h2>
 				<p className={styles.author}>{song.author}</p>
 			</div>
-			<progress className={styles.progress} max={100} value={progress} />
+			<progress className={styles.progress} max={100} value={progress}>
+				{`${progress}%`}
+			</progress>
 		</div>
 	) : (
 		<div 
