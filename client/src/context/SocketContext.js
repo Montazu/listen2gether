@@ -12,15 +12,11 @@ const SocketProvider = ({ children }) => {
 
 	useEffect(() => {
 		socket.connect()
-		listeners()
-	}, [])
-
-	const listeners = () => {
 		socket.on('playlist', setPlaylist)
 		socket.on('song', setSong)
 		socket.on('newSong', song => setPlaylist(playlist => [...playlist, song]))
 		socket.on('progress', setProgress)
-	}
+	}, [])
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
