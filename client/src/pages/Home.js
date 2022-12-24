@@ -1,34 +1,11 @@
-import { useEffect, useState } from 'react'
-import { useSocket } from '../hooks/useSocket'
+import { useContext, useState } from 'react'
+import { SocketContext } from '../context/SocketContext'
 import styles from '../styles/Home.module.css'
 
 export const Home = () => {
-	const [playlist, setPlaylist] = useState([])
-	const [song, setSong] = useState()
 	const [newSong, setNewSong] = useState('')
-	const [progress, setProgress] = useState(0)
 
-	const socket = useSocket(process.env.REACT_APP_API, {
-		transports: ["websocket"]
-	  })
-
-	useEffect(() => {
-		socket.connect()
-		startListeners()
-	}, [])
-
-	const startListeners = () => {
-		socket.on('playlist', (arg) => setPlaylist(arg))
-		socket.on('song', (arg) => {
-			setSong(arg)
-			scrollView()
-		})
-		socket.on('newSong', (arg) => {
-			setPlaylist(e => [...e, arg])
-			setPlaylist(e => [...new Set(e)])
-		})
-		socket.on('progress', (arg) => setProgress(arg))
-	}
+	const { socket, playlist, song, progress } = useContext(SocketContext)
 
 	const addNewSong = (event) => {
 		event.preventDefault()
@@ -36,12 +13,12 @@ export const Home = () => {
 		setNewSong('')
 	}
 
-	if (!song && playlist.length > 0) setSong(playlist[0])
-
 	const scrollView = () => {
 		const activeSong = document.getElementById('activeSong')
 		if (activeSong) activeSong.scrollIntoView({ behavior: 'smooth' })
 	}
+
+	if (progress === 0) scrollView()
 
 	return (
 		<div className={styles.main}>
