@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 
 export const Admin = () => {
-	const { socket, playlist, song, progress } = useContext(SocketContext)
+	const { playlist } = useContext(SocketContext)
 
 	console.log(playlist)
 

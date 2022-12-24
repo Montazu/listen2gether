@@ -1,31 +1,19 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
+import { Form } from '../components/form/Form'
 import { SocketContext } from '../context/SocketContext'
 import styles from '../styles/Home.module.css'
 
 export const Home = () => {
-	const [newSong, setNewSong] = useState('')
+	const { playlist, song, progress } = useContext(SocketContext)
 
-	const { socket, playlist, song, progress } = useContext(SocketContext)
-
-	const addNewSong = (event) => {
-		event.preventDefault()
-		socket.emit('newSong', newSong)
-		setNewSong('')
-	}
-
-	const scrollView = () => {
+	if (progress === 0) {
 		const activeSong = document.getElementById('activeSong')
 		if (activeSong) activeSong.scrollIntoView({ behavior: 'smooth' })
 	}
 
-	if (progress === 0) scrollView()
-
 	return (
 		<div className={styles.main}>
-			<form className={styles.form} onSubmit={addNewSong}>
-				<input className={styles.input} type={'url'} placeholder={'Wpisz link z YouTube'} onChange={e => setNewSong(e.target.value)} value={newSong} required={true} />
-				<button className={styles.button} type={'submit'}>Dodaj</button>
-			</form>
+			<Form />
 			{song && (
 				<>
 					<div className={styles.playlist}>
