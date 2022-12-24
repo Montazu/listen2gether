@@ -1,10 +1,11 @@
 import { useContext } from 'react'
 import { Form } from '../components/form/Form'
+import { Playlist } from '../components/playlist/Playlist'
 import { SocketContext } from '../context/SocketContext'
 import styles from '../styles/Home.module.css'
 
 export const Home = () => {
-	const { playlist, song, progress } = useContext(SocketContext)
+	const { song, progress } = useContext(SocketContext)
 
 	if (progress === 0) {
 		const activeSong = document.getElementById('activeSong')
@@ -16,17 +17,7 @@ export const Home = () => {
 			<Form />
 			{song && (
 				<>
-					<div className={styles.playlist}>
-						{playlist.map((item) => (
-							<div className={styles.song} key={item.id} id={item.id === song.id ? 'activeSong' : null} style={item.id === song.id ? { background: '#1A1A1A' } : {}}>
-								<div className={styles.container}>
-									<img className={styles.image} src={item.thumbnail} alt={item.title} />
-								</div>
-								<h2 className={styles.title}>{item.title}</h2>
-								<p className={styles.author}>{item.author}</p>
-							</div>
-						))}
-					</div>
+					<Playlist />
 					<div className={styles.active}>
 						<div className={styles.wrapper}>
 							<div className={styles.container}>
