@@ -10,7 +10,7 @@ export const Host = () => {
 
 	useEffect(() => {
 		if (!activeSong) setActiveSong(song)
-	}, [song])
+	}, [activeSong, song])
 
 	if (activeSong) document.title = activeSong.title
 

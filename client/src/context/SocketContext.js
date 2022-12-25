@@ -16,7 +16,7 @@ const SocketContextProvider = ({ children }) => {
 		socket.on('song', setSong)
 		socket.on('newSong', song => setPlaylist(playlist => [...playlist, song]))
 		socket.on('progress', setProgress)
-	}, [])
+	}, [socket])
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
