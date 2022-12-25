@@ -3,7 +3,7 @@ import { useSocket } from '../hooks/useSocket'
 
 const SocketContext = createContext()
 
-const SocketProvider = ({ children }) => {
+const SocketContextProvider = ({ children }) => {
 	const [playlist, setPlaylist] = useState([])
 	const [song, setSong] = useState()
 	const [progress, setProgress] = useState(0)
@@ -20,9 +20,14 @@ const SocketProvider = ({ children }) => {
 
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
-	const value = { socket, playlist, song, progress: progress || 0 }
+	const value = { 
+		playlist, 
+		progress: progress || 0,
+		socket, 
+		song: song || null
+	}
 	
 	return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
 }
 
-export { SocketProvider, SocketContext }
+export { SocketContext, SocketContextProvider }

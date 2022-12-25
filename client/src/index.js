@@ -5,12 +5,12 @@ import { Home } from './pages/Home'
 import { Host } from './pages/Host'
 import { Admin } from './pages/Admin'
 import { NoMatch } from './pages/NoMatch'
-import { SocketProvider } from './context/SocketContext'
+import { SocketContextProvider } from './context/SocketContext'
 import './styles/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<SocketProvider>
+		<SocketContextProvider>
 			<BrowserRouter>
 				<Routes>
 					<Route index element={<Home />} />
@@ -19,6 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 					<Route path={'*'} element={<NoMatch />} />
 				</Routes>
 			</BrowserRouter>
-		</SocketProvider>
+		</SocketContextProvider>
 	</React.StrictMode>
 )
