@@ -15,8 +15,10 @@
 	"dependencies": {
 		"node-fetch": "^3.3.0",
 		"nodejs-file-downloader": "^4.10.3",
-		"nodemon": "^2.0.20",
 		"socket.io": "^4.5.4",
 		"youtubei.js": "^2.6.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.20"
 	}
 }

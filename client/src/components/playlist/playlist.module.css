@@ -1,0 +1,4 @@
+.playlist {
+	grid-area: 2 / 1 / 3 / 2;
+	overflow-y: auto;
+}
