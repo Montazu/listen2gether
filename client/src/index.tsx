@@ -3,22 +3,22 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Host } from './pages/Host'
-import { Admin } from './pages/Admin'
+// import { Admin } from './pages/Admin'
 import { NoMatch } from './pages/NoMatch'
-import { SocketContextProvider } from './context/SocketContext'
+import { AppProvider } from './contexts/appContext'
 import './styles/index.css'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<SocketContextProvider>
+		<AppProvider>
 			<BrowserRouter>
 				<Routes>
 					<Route index element={<Home />} />
 					<Route path={'/host'} element={<Host />} />
-					<Route path={'/admin'} element={<Admin />} />
+					{/* <Route path={'/admin'} element={<Admin />} /> */}
 					<Route path={'*'} element={<NoMatch />} />
 				</Routes>
 			</BrowserRouter>
-		</SocketContextProvider>
+		</AppProvider>
 	</React.StrictMode>
 )
