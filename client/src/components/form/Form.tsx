@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react'
-import { SocketContext } from '../../context/SocketContext'
-import styles from './Form.module.css'
+import { useState } from 'react'
+import { useAppState } from '../../contexts/appContext'
+import styles from './form.module.css'
 
 export const Form = () => {
 	const [url, setUrl] = useState('')
-	const { socket } = useContext(SocketContext)
+	const { socket } = useAppState()
 
-	const sendUrl = (event) => {
+	const sendUrl = (event: { preventDefault: () => void }) => {
 		event.preventDefault()
 		socket.emit('newSong', url)
 		setUrl('')

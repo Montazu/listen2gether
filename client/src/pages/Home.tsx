@@ -1,12 +1,11 @@
-import { useContext } from 'react'
 import { Form } from '../components/form/Form'
 import { Playlist } from '../components/playlist/Playlist'
 import { Song } from '../components/playlist/song/Song'
-import { SocketContext } from '../context/SocketContext'
-import styles from '../styles/Home.module.css'
+import { useAppState } from '../contexts/appContext'
+import styles from '../styles/home.module.css'
 
 export const Home = () => {
-	const { song } = useContext(SocketContext)
+	const { song } = useAppState()
 
 	return (
 		<div className={styles.main}>
@@ -14,7 +13,7 @@ export const Home = () => {
 			{song && (
 				<>
 					<Playlist />
-					<Song active />
+					<Song active={true} {...song} />
 				</>
 			)}
 		</div>
