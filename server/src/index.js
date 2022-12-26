@@ -28,8 +28,13 @@ const addSong = async (url) => {
 	try {
 		if (!url) throw new Error('Nie podano parametru URL')
 
-		const parameters = new URLSearchParams(new URL(url).search)
-		const id = parameters.get('v')
+		if(url.test(/youtu\.be/gm)) {
+			const parameters = new URL(url).pathname
+			const id = parameters.replace('/', '')
+		} else {
+			const parameters = new URLSearchParams(new URL(url).search)
+			const id = parameters.get('v')
+		}
 		if (!parameters || !id) throw new Error('Podany URL jest nieprawidłowy')
 
 		const yt = await Innertube.create()
