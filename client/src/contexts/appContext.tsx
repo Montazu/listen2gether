@@ -17,7 +17,7 @@ interface SongTypes {
 	title: string;
 	author: string;
 	thumbnail: string;
-	url: string;
+	url: string | null;
 }
 
 const AppStateContext = createContext<AppStateContextTypes | null>(null)
@@ -38,6 +38,20 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		socket.on('song', setSong)
 		socket.on('newSong', song => setPlaylist(playlist => [...playlist, song]))
 		socket.on('progress', setProgress)
+		socket.on('newSongUrl', (newSong: SongTypes) => {
+			setSong((s) => {
+				if (s && s.id === newSong.id) return newSong
+				return s
+			})
+
+			setPlaylist((playlist: SongTypes[]) => {
+				const selectSong = playlist.find(s => s.id === newSong.id)
+				if (!selectSong) return playlist
+				const index = playlist.indexOf(selectSong)
+				playlist.splice(index, 1, newSong)
+				return playlist
+			})
+		})
 	}, [socket])
 
 	if (!song && playlist.length > 0) setSong(playlist[0])

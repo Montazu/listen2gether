@@ -5,16 +5,21 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"start": "node --experimental-specifier-resolution=node --no-warnings src",
-		"dev": "nodemon --experimental-specifier-resolution=node --no-warnings src",
+		"start": "node -r dotenv/config --experimental-specifier-resolution=node --no-warnings src",
+		"dev": "nodemon -r dotenv/config --experimental-specifier-resolution=node --no-warnings src",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"http": "^0.0.1-security",
 		"node-fetch": "^3.3.0",
 		"nodejs-file-downloader": "^4.10.3",
+		"pg": "^8.8.0",
 		"socket.io": "^4.5.4",
 		"youtubei.js": "^2.6.0"
 	},
