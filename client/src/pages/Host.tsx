@@ -3,11 +3,11 @@ import { Form } from '../components/form/Form'
 import { useAppState } from '../contexts/appContext'
 
 interface SongTypes {
-	id: number;
-	title: string;
-	author: string;
-	thumbnail: string;
-	url: string | null;
+	id: number
+	title: string
+	author: string
+	thumbnail: string
+	url: string | null
 }
 
 export const Host = () => {
@@ -23,17 +23,18 @@ export const Host = () => {
 
 	const play = () => {
 		audio.current?.play()
+		socket.emit('song', activeSong)
 		setInterval(() => {
 			const currentTime = audio.current?.currentTime || 0
 			const duration = audio.current?.duration || 0
-			socket.emit('progress', Math.floor(currentTime / duration * 100))
+			socket.emit('progress', Math.floor((currentTime / duration) * 100))
 		}, 5000)
 	}
 
 	const nextSong = () => {
 		if (activeSong) {
 			const e = playlist.indexOf(activeSong)
-			const a = playlist[e+1]
+			const a = playlist[e + 1]
 			setActiveSong(a)
 			socket.emit('song', a)
 			socket.emit('progress', 0)
@@ -50,7 +51,7 @@ export const Host = () => {
 			{activeSong && (
 				<>
 					<h1>{activeSong.title}</h1>
-					{activeSong.url &&
+					{activeSong.url && (
 						<audio
 							preload={'true'}
 							src={activeSong.url}
@@ -59,7 +60,7 @@ export const Host = () => {
 							autoPlay={true}
 							controls={true}
 						/>
-					}
+					)}
 					<button onClick={play}>Play</button>
 					<button onClick={nextSong}>Next</button>
 					<button onClick={clear}>Clear playlist</button>
