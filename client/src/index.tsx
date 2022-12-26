@@ -10,15 +10,15 @@ import './styles/index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<AppProvider>
-			<BrowserRouter>
+		<BrowserRouter>
+			<AppProvider>
 				<Routes>
 					<Route index element={<Home />} />
 					<Route path={'/host'} element={<Host />} />
 					<Route path={'/admin'} element={<Admin />} />
 					<Route path={'*'} element={<NoMatch />} />
 				</Routes>
-			</BrowserRouter>
-		</AppProvider>
+			</AppProvider>
+		</BrowserRouter>
 	</React.StrictMode>
 )
