@@ -2,22 +2,22 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import { useSocket } from '../hooks/useSocket'
 
 interface AppStateContextTypes {
-	playlist: SongTypes[];
-	progress: number;
-	socket: any;
-	song: SongTypes | null;
+	playlist: SongTypes[]
+	progress: number
+	socket: any
+	song: SongTypes | null
 }
 
 interface AppProviderProps {
-	children: ReactNode;
+	children: ReactNode
 }
 
 interface SongTypes {
-	id: number;
-	title: string;
-	author: string;
-	thumbnail: string;
-	url: string | null;
+	id: number
+	title: string
+	author: string
+	thumbnail: string
+	url: string | null
 }
 
 const AppStateContext = createContext<AppStateContextTypes | null>(null)
@@ -27,16 +27,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const [song, setSong] = useState<SongTypes | null>(null)
 	const [progress, setProgress] = useState<number>(0)
 
-	const socket = useSocket({ 
-		url: process.env.REACT_APP_API!, 
-		options: { transports: ['websocket'] } 
+	const socket = useSocket({
+		url: process.env.REACT_APP_API!,
+		options: { transports: ['websocket'] },
 	})
 
 	useEffect(() => {
 		socket.connect()
 		socket.on('playlist', setPlaylist)
 		socket.on('song', setSong)
-		socket.on('newSong', song => setPlaylist(playlist => [...playlist, song]))
+		socket.on('newSong', (song) => setPlaylist((playlist) => [...playlist, song]))
 		socket.on('progress', setProgress)
 		socket.on('newSongUrl', (newSong: SongTypes) => {
 			setSong((s) => {
@@ -45,7 +45,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			})
 
 			setPlaylist((playlist: SongTypes[]) => {
-				const selectSong = playlist.find(s => s.id === newSong.id)
+				const selectSong = playlist.find((s) => s.id === newSong.id)
 				if (!selectSong) return playlist
 				const index = playlist.indexOf(selectSong)
 				playlist.splice(index, 1, newSong)
@@ -57,7 +57,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	if (!song && playlist.length > 0) setSong(playlist[0])
 
 	const value = { playlist, progress, socket, song }
-	
+
 	return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>
 }
 
