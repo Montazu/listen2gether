@@ -19,18 +19,25 @@ const pool = new Pool({
 pool.connect()
 
 const getPlaylist = async () => {
-	const sql = `SELECT * FROM listen2gether`
+	const sql = `SELECT * FROM ${process.env.DB_TABLE}`
 	const result = await pool.query(sql)
 	return result.rows
 }
 
 const addSong = async (url) => {
+	let id
+
 	try {
 		if (!url) throw new Error('Nie podano parametru URL')
 
-		const parameters = new URLSearchParams(new URL(url).search)
-		const id = parameters.get('v')
-		if (!parameters || !id) throw new Error('Podany URL jest nieprawidłowy')
+		if(/youtu\.be/gm.test(url)) {
+			const params = new URL(url).pathname
+			id = params.replace('/', '')
+		} else {
+			const parameters = new URLSearchParams(new URL(url).search)
+			id = parameters.get('v')
+		}
+		// if (!parameters || !id) throw new Error('Podany URL jest nieprawidłowy')
 
 		const yt = await Innertube.create()
 		const musicData = await yt.actions.execute('/player', { videoId: id, client: 'YTMUSIC_ANDROID', parse: true })
@@ -40,7 +47,7 @@ const addSong = async (url) => {
 		const { title, author } = await musicData.video_details
 		const thumbnail = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 
-		const sql = `INSERT INTO listen2gether (title, author, thumbnail) VALUES ('${title}', '${author}', '${thumbnail}') RETURNING *`
+		const sql = `INSERT INTO ${process.env.DB_TABLE} (title, author, thumbnail) VALUES ('${title}', '${author}', '${thumbnail}') RETURNING *`
 		const result = await pool.query(sql)
 		const data = result.rows[0]
 		const musicId = data.id
@@ -60,7 +67,7 @@ const addSong = async (url) => {
 
 		const musicNewUrl = uploader.replace('.sh/', '.sh/get/')
 
-		const sqlUpdate = `UPDATE listen2gether SET url='${musicNewUrl}' WHERE id=${musicId} RETURNING *`
+		const sqlUpdate = `UPDATE ${process.env.DB_TABLE} SET url='${musicNewUrl}' WHERE id=${musicId} RETURNING *`
 		const odp = await pool.query(sqlUpdate)
 		io.emit('newSongUrl', odp.rows[0])
 	} catch (error) {
@@ -83,7 +90,7 @@ io.on('connection', async (socket) => {
 	socket.on('progress', (arg) => socket.broadcast.emit('progress', arg))
 	socket.on('clear', () => {
 		song = null
-		const sql = `DELETE FROM listen2gether`
+		const sql = `DELETE FROM ${process.env.DB_TABLE}`
 		pool.query(sql)
 	})
 })
