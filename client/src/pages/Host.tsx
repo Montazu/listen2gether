@@ -35,7 +35,7 @@ export const Host = () => {
 		if (activeSong) {
 			const e = playlist.indexOf(activeSong)
 			const a = playlist[e + 1]
-			setActiveSong(a)
+			setActiveSong(a || playlist[0])
 			socket.emit('song', a)
 			socket.emit('progress', 0)
 		}

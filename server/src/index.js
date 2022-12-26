@@ -7,7 +7,9 @@ import fetch from 'node-fetch'
 import elo from 'pg'
 const { Pool } = elo
 
-const io = new Server(1234, { cors: { origin: ['https://l2g.montazu.pl', 'http://192.168.1.84:3000'] } })
+const io = new Server(1234, {
+	cors: { origin: ['https://l2g.montazu.pl', 'http://192.168.1.84:3000'] },
+})
 
 const pool = new Pool({
 	user: process.env.DB_USER,
@@ -30,7 +32,7 @@ const addSong = async (url) => {
 	try {
 		if (!url) throw new Error('Nie podano parametru URL')
 
-		if(/youtu\.be/gm.test(url)) {
+		if (/youtu\.be/gm.test(url)) {
 			const params = new URL(url).pathname
 			id = params.replace('/', '')
 		} else {
@@ -40,10 +42,14 @@ const addSong = async (url) => {
 		// if (!parameters || !id) throw new Error('Podany URL jest nieprawidłowy')
 
 		const yt = await Innertube.create()
-		const musicData = await yt.actions.execute('/player', { videoId: id, client: 'YTMUSIC_ANDROID', parse: true })
+		const musicData = await yt.actions.execute('/player', {
+			videoId: id,
+			client: 'YTMUSIC_ANDROID',
+			parse: true,
+		})
 		const available = musicData.playability_status.status === 'OK'
 		if (!available) throw new Error('To nie jest muzyka, lub jest niedostępna')
-		
+
 		const { title, author } = await musicData.video_details
 		const thumbnail = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 
@@ -52,16 +58,16 @@ const addSong = async (url) => {
 		const data = result.rows[0]
 		const musicId = data.id
 		io.emit('newSong', data)
-	
+
 		const musicUrl = await musicData.streaming_data.adaptive_formats.pop().url
 		const downloader = new Downloader({ url: musicUrl, directory: './downloads', fileName: id })
 		await downloader.download()
 
-		const uploader =  await fetch(`https://transfer.sh/${id}`, {
-			method: "PUT",
+		const uploader = await fetch(`https://transfer.sh/${id}`, {
+			method: 'PUT',
 			body: fs.createReadStream(`./downloads/${id}`),
-			redirect: "follow",
-		}).then(res => res.text())
+			redirect: 'follow',
+		}).then((res) => res.text())
 
 		fs.unlinkSync(`./downloads/${id}`)
 

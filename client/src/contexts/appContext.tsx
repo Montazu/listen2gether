@@ -34,7 +34,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 	useEffect(() => {
 		socket.connect()
-		socket.on('playlist', setPlaylist)
+		socket.on('playlist', (playlist) =>
+			setPlaylist(playlist.sort((a: SongTypes, b: SongTypes) => a.id - b.id))
+		)
 		socket.on('song', setSong)
 		socket.on('newSong', (song) => setPlaylist((playlist) => [...playlist, song]))
 		socket.on('progress', setProgress)
@@ -49,7 +51,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 				if (!selectSong) return playlist
 				const index = playlist.indexOf(selectSong)
 				playlist.splice(index, 1, newSong)
-				return playlist
+				return playlist.sort((a, b) => a.id - b.id)
 			})
 		})
 	}, [socket])
