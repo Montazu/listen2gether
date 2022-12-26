@@ -7,7 +7,7 @@ interface SongTypes {
 	title: string;
 	author: string;
 	thumbnail: string;
-	url: string;
+	url: string | null;
 }
 
 export const Host = () => {
@@ -16,7 +16,7 @@ export const Host = () => {
 	const audio = useRef<HTMLAudioElement | null>(null)
 
 	useEffect(() => {
-		if (!activeSong) setActiveSong(song)
+		if ((!activeSong && song) || !activeSong?.url) setActiveSong(song)
 	}, [activeSong, song])
 
 	if (activeSong) document.title = activeSong.title
@@ -50,14 +50,16 @@ export const Host = () => {
 			{activeSong && (
 				<>
 					<h1>{activeSong.title}</h1>
-					<audio
-						preload={'true'}
-						src={activeSong.url}
-						ref={audio}
-						onEnded={nextSong}
-						autoPlay={true}
-						controls={true}
-					/>
+					{activeSong.url &&
+						<audio
+							preload={'true'}
+							src={activeSong.url}
+							ref={audio}
+							onEnded={nextSong}
+							autoPlay={true}
+							controls={true}
+						/>
+					}
 					<button onClick={play}>Play</button>
 					<button onClick={nextSong}>Next</button>
 					<button onClick={clear}>Clear playlist</button>
